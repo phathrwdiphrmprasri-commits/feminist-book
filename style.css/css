@@ -1,0 +1,911 @@
+/* =====================================================
+   RESET / BASIC
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f8e9e9;
+    color: #493838;
+    font-family: "Cormorant Garamond", serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+:root {
+    --pink: #f3d6d8;
+    --light-pink: #f9e9e9;
+    --cream: #fffaf3;
+    --dark-pink: #b8878d;
+    --brown: #493838;
+    --soft-brown: #80686a;
+    --gold: #b99a72;
+    --white: #fffdf9;
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: #f8eaea;
+    color: #5b4547;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+
+h1 {
+    font-family: "Pinyon Script", cursive;
+    font-size: clamp(60px, 9vw, 140px);
+    font-weight: 400;
+    color: #4d3939;
+    line-height: 1;
+    margin: 0 0 35px;
+    text-align: center;
+}
+
+h2 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 500;
+    color: var(--brown);
+    line-height: 1.2;
+    margin: 0 0 25px;
+    text-align: center;
+}
+
+h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--brown);
+    text-align: center;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px 20px;
+
+    overflow: hidden;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #f8e3e5 0px,
+            #f8e3e5 45px,
+            #fffaf9 45px,
+            #fffaf9 90px
+        );
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   PAPER TEXTURE
+===================================================== */
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        radial-gradient(
+            rgba(120, 80, 80, 0.07) 1px,
+            transparent 1px
+        );
+
+    background-size: 8px 8px;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   HERO INNER
+   ไม่มีกรอบ
+   ไม่มีพื้นขาว
+   ไม่มีเงา
+===================================================== */
+
+.hero-inner {
+    position: relative;
+    z-index: 2;
+
+    width: min(900px, 100%);
+
+    margin: 0 auto;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: transparent;
+    border: none;
+    box-shadow: none;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   HERO TEXT
+===================================================== */
+
+.eyebrow {
+    width: 100%;
+
+    letter-spacing: 6px;
+    font-size: 13px;
+
+    color: var(--soft-brown);
+
+    margin: 0 0 15px;
+
+    text-align: center;
+}
+
+
+.ornament {
+    font-size: 22px;
+
+    color: var(--dark-pink);
+
+    margin: 25px 0;
+
+    text-align: center;
+}
+
+
+.tagline {
+    width: 100%;
+    max-width: 850px;
+
+    font-family: "Playfair Display", serif;
+
+    font-style: italic;
+
+    font-size: 19px;
+
+    color: var(--soft-brown);
+
+    margin: 0 auto 25px;
+
+    text-align: center;
+}
+
+
+.hero-inner p {
+    width: 100%;
+    max-width: 850px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   BOOK COVER
+===================================================== */
+
+.book-cover {
+    width: 230px;
+    height: 340px;
+
+    margin: 40px auto 30px;
+
+    padding: 8px;
+
+    box-sizing: border-box;
+
+    background: #fffaf4;
+
+    border: 7px solid #eee0d3;
+
+    box-shadow:
+        0 15px 35px rgba(70, 45, 45, 0.25);
+
+    transform: rotate(-2deg);
+
+    transition: 0.4s ease;
+}
+
+.book-cover:hover {
+    transform: rotate(0deg) translateY(-8px);
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+/* Tablet */
+@media (max-width: 768px) {
+
+    .hero {
+        padding: 50px 20px;
+    }
+
+    .hero-inner {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .eyebrow {
+        font-size: 11px;
+        letter-spacing: 4px;
+    }
+
+    .tagline {
+        font-size: 16px;
+    }
+
+    .hero-inner p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .book-cover {
+        width: 200px;
+        height: 300px;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .hero {
+        min-height: 100svh;
+        padding: 40px 15px;
+    }
+
+    .hero-inner {
+        width: 100%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: clamp(55px, 18vw, 85px);
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        font-size: 34px;
+    }
+
+    h3 {
+        font-size: 25px;
+    }
+
+    .eyebrow {
+        font-size: 10px;
+        letter-spacing: 3px;
+    }
+
+    .ornament {
+        margin: 18px 0;
+        font-size: 18px;
+    }
+
+    .tagline {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .hero-inner p {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .book-cover {
+        width: 170px;
+        height: 250px;
+
+        margin-top: 30px;
+    }
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.hero-button {
+    display: inline-block;
+
+    padding: 12px 32px;
+
+    margin-top: 15px;
+
+    color: white;
+
+    background: var(--dark-pink);
+
+    text-decoration: none;
+
+    border-radius: 30px;
+
+    letter-spacing: 2px;
+
+    transition: 0.3s ease;
+}
+
+.hero-button:hover {
+    background: var(--brown);
+
+    transform: translateY(-3px);
+}
+
+
+/* =====================================================
+   DECORATIONS
+===================================================== */
+
+.bow {
+    position: absolute;
+
+    font-size: 55px;
+
+    z-index: 3;
+
+    color: var(--dark-pink);
+}
+
+.bow-left {
+    top: 45px;
+    left: 55px;
+
+    transform: rotate(-15deg);
+}
+
+.bow-right {
+    bottom: 45px;
+    right: 55px;
+
+    transform: rotate(15deg);
+}
+
+.hero-decoration {
+    position: absolute;
+
+    font-size: 45px;
+
+    color: var(--dark-pink);
+
+    z-index: 3;
+}
+
+.top-left {
+    top: 55px;
+    left: 100px;
+}
+
+.top-right {
+    top: 55px;
+    right: 100px;
+}
+
+
+/* =====================================================
+   GENERAL SECTION
+===================================================== */
+
+.section {
+    min-height: 100vh;
+
+    padding: 100px 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   FRAMES
+===================================================== */
+
+.vintage-frame,
+.decorative-frame,
+.book-section {
+
+    width: min(1050px, 100%);
+
+    position: relative;
+
+    margin: 0 auto;
+
+    background: var(--cream);
+
+    padding: 65px;
+
+    border: 1px solid #8d7774;
+
+    box-shadow:
+        0 15px 40px rgba(80, 50, 50, 0.12);
+}
+
+
+/* =====================================================
+   INNER BORDER
+===================================================== */
+
+/* ลบกรอบของส่วน Book */
+.book-section::before {
+    display: none;
+}
+
+.vintage-frame::before,
+.decorative-frame::before {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 1px solid #c5a7a4;
+    pointer-events: none;
+}
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-label {
+    font-size: 12px;
+
+    letter-spacing: 5px;
+
+    color: var(--dark-pink);
+
+    margin-bottom: 8px;
+
+    text-align: center;
+}
+
+.small-ornament {
+    color: var(--dark-pink);
+
+    font-size: 25px;
+
+    margin: 10px 0 30px;
+
+    text-align: center;
+}
+
+.ornament-line {
+    text-align: center;
+
+    color: var(--dark-pink);
+
+    font-size: 20px;
+
+    margin: 15px 0 35px;
+}
+
+
+/* =====================================================
+   ONE COLUMN
+===================================================== */
+
+.one-column {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    align-items: center;
+
+    justify-items: center;
+}
+
+.text-column {
+    width: 100%;
+
+    max-width: 800px;
+
+    min-width: 0;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+.text-column p {
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   SETTING
+===================================================== */
+
+.setting-section {
+    background: #f6dfe1;
+}
+
+.setting-grid {
+    grid-template-columns: 1fr;
+}
+
+
+/* =====================================================
+   POLAROID
+===================================================== */
+
+.polaroid {
+    width: min(100%, 400px);
+
+    margin: 0 auto;
+
+    background: white;
+
+    padding: 12px 12px 25px;
+
+    box-shadow:
+        0 10px 25px rgba(60, 40, 40, 0.20);
+
+    transform: rotate(2deg);
+
+    transition: 0.4s ease;
+}
+
+.polaroid:hover {
+    transform: rotate(0deg) translateY(-8px);
+}
+
+.polaroid img {
+    width: 100%;
+
+    height: 300px;
+
+    object-fit: cover;
+}
+
+.polaroid p {
+    text-align: center;
+
+    font-family: "Pinyon Script", cursive;
+
+    font-size: 27px;
+
+    margin-top: 8px;
+}
+
+
+/* =====================================================
+   INSPIRATION
+===================================================== */
+
+.inspiration-section {
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #f8e3e5 0px,
+            #f8e3e5 50px,
+            #fffafa 50px,
+            #fffafa 100px
+        );
+}
+
+
+/* =====================================================
+   INSPIRATION IMAGE
+===================================================== */
+
+.image-column {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.image-column img {
+    width: 100%;
+
+    max-width: 420px;
+
+    max-height: 420px;
+
+    object-fit: cover;
+
+    border: 8px solid #fffaf3;
+
+    box-shadow:
+        0 10px 25px rgba(60, 40, 40, 0.18);
+}
+
+
+/* =====================================================
+   CHARACTER SECTION
+===================================================== */
+
+.characters-section {
+    background: #eadbd4;
+}
+
+.book-section {
+    background: #fffdf7;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   CHARACTER BOOK
+===================================================== */
+
+.character-book {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    margin-top: 40px;
+
+    border: 1px solid #d8c7bd;
+
+    box-shadow:
+        0 15px 40px rgba(50, 35, 30, 0.16);
+}
+
+
+/* =====================================================
+   CHARACTER PAGE
+===================================================== */
+
+.character-page {
+
+    min-width: 0;
+
+    min-height: 570px;
+
+    padding: 45px 25px;
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.035),
+            transparent 12%
+        ),
+        #fffdf8;
+
+    border-right: 1px solid #d8c7bd;
+
+    transition: 0.3s ease;
+}
+
+.character-page:last-child {
+    border-right: none;
+}
+
+.character-page:hover {
+    background: #fffaf3;
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 25px rgba(70, 40, 40, 0.12);
+}
+
+
+/* =====================================================
+   PAGE NUMBER
+===================================================== */
+
+.page-number {
+
+    position: absolute;
+
+    top: 15px;
+    right: 20px;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 13px;
+
+    color: #9b8580;
+}
+
+
+/* =====================================================
+   PAGE LABEL
+===================================================== */
+
+.page-label {
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    color: var(--dark-pink);
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   CHARACTER IMAGE
+===================================================== */
+
+<footer class="site-footer">
+
+    <div class="footer-frame">
+
+        <!-- Decorative bow -->
+        <div class="footer-bow">
+            ‎ . ݁⋆ ۶ৎ ݁˖ .
+        </div>
+
+
+        <!-- Label -->
+        <p class="footer-label">
+            A WORD FROM THE AUTHOR
+        </p>
+
+
+        <!-- Quote -->
+        <div class="footer-quote">
+
+            <div class="footer-quote-mark">
+                “
+            </div>
+
+            <blockquote>
+                I am not afraid of storms,
+                for I am learning how to sail my ship.
+            </blockquote>
+
+            <p class="quote-author">
+                — Louisa May Alcott
+            </p>
+
+        </div>
+
+
+        <!-- Closing -->
+        <h2 class="footer-title">
+            Little Women
+        </h2>
+
+
+        <div class="footer-ornament">
+            ♡ ───── ❦ ───── ♡
+        </div>
+
+
+        <p class="footer-text">
+            A story of sisterhood, dreams,
+            love, and becoming yourself.
+        </p>
+
+
+        <!-- Navigation -->
+        <nav class="footer-nav">
+
+            <a href="#home">
+                Home
+            </a>
+
+            <span>♡</span>
+
+            <a href="#about">
+                About
+            </a>
+
+            <span>♡</span>
+
+            <a href="#setting">
+                Setting
+            </a>
+
+            <span>♡</span>
+
+            <a href="#characters">
+                Characters
+            </a>
+
+        </nav>
+
+
+        <!-- Divider -->
+        <div class="footer-line">
+            ─────────────── ❦ ───────────────
+        </div>
+
+
+        <!-- Credit -->
+        <p class="footer-credit">
+            <em>Little Women</em> by Louisa May Alcott
+        </p>
+
+        <p class="footer-copy">
+            © 2026 Little Women
+        </p>
+
+    </div>
+
+</footer>
