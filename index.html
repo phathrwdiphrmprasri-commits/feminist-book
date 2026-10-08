@@ -2,715 +2,1453 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Little Women</title>
-
-
-    <!-- =========================================
-         GOOGLE FONTS
-    ========================================== -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap"
-        rel="stylesheet">
-
-
-    <!-- =========================================
-         BOOTSTRAP
-         ใช้สำหรับ Accordion
-    ========================================== -->
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
-
-
-    <!-- =========================================
-         YOUR CSS
-    ========================================== -->
-<link rel="stylesheet" href="css/style.css">
     
-</head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Women — An Interactive Storybook</title>
+    <meta name="description" content="An interactive Little Women storybook exploring sisterhood, dreams, characters, feminism, creativity, and growing up.">
 
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           RESET & BASE STYLES
+        ====================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f8e9e9;
+            color: #493838;
+            font-family: "Cormorant Garamond", serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f3dddd;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5a7a4;
+            border-radius: 20px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9e7775;
+        }
+
+        /* PAGE LOADER */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: #f8e9e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity .8s ease, visibility .8s ease;
+        }
+        .page-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-book {
+            font-size: 50px;
+            animation: loaderFloat 1.5s ease-in-out infinite;
+        }
+        .loader-text {
+            margin-top: 15px;
+            letter-spacing: 3px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        @keyframes loaderFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        /* PARTICLES */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            color: #b88c91;
+            opacity: .45;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            from { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            15% { opacity: .5; }
+            85% { opacity: .4; }
+            to { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* MUSIC CONTROL BUTTON */
+        
+        .music-control-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #d7bdbd;
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #503d40;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(80,50,50,.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .3s ease;
+        }
+        .music-control-btn:hover {
+            background: #76585d;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* READING PROGRESS */
+        .reading-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, #a98286, #d6b5b7, #8e6c70);
+            z-index: 10000;
+        }
+
+        /* NAVIGATION BAR */
+        .storybook-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #d7bdbd;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(80,50,50,.08);
+            max-width: 95vw;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .storybook-nav a {
+            padding: 6px 12px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border-radius: 20px;
+            transition: .3s ease;
+        }
+        .storybook-nav a:hover {
+            background: #ead1d2;
+        }
+
+        /* CHAPTER RAIL */
+        .story-rail {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 8500;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .story-rail a {
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(122,89,93,.35);
+            border-radius: 50%;
+            background: rgba(255,250,249,.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            transition: .3s ease;
+        }
+        .story-rail a:hover, .story-rail a.active {
+            background: #76585d;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px;
+            background: radial-gradient(circle at center, #fff8f7 0%, #f8e9e9 60%, #efdada 100%);
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 20px;
+            border: 1px solid #c8aaaa;
+            pointer-events: none;
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        .eyebrow {
+            font-size: 12px;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            opacity: .8;
+        }
+        h1 {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(60px, 10vw, 130px);
+            font-weight: 400;
+            line-height: .9;
+            color: #4d393b;
+            text-shadow: 2px 2px 0 #e2c8c8;
+        }
+        .ornament {
+            margin: 20px auto;
+            color: #a77d82;
+            letter-spacing: 4px;
+        }
+        .tagline {
+            font-size: clamp(16px, 2.5vw, 22px);
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+        .book-cover {
+            position: relative;
+            width: min(220px, 60vw);
+            margin: 20px auto 30px;
+            perspective: 1000px;
+        }
+        .book-cover img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 10px 15px 30px rgba(60,40,40,.2);
+            transition: transform .5s ease;
+        }
+        .book-cover:hover img {
+            transform: rotateY(-8deg) rotateX(3deg) translateY(-8px);
+        }
+        .hero-button {
+            display: inline-block;
+            padding: 12px 28px;
+            border: 1px solid #87666a;
+            border-radius: 50px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 12px;
+            background: #fff8f7;
+            transition: .35s ease;
+        }
+        .hero-button:hover {
+            color: white;
+            background: #76585d;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(80,50,50,.15);
+        }
+
+        /* STORY PAGES COMMON */
+        .story-page {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .story-page::before {
+            content: "";
+            position: absolute;
+            inset: 20px;
+            border: 1px solid #c8aaaa;
+            pointer-events: none;
+        }
+        .story-inner {
+            width: min(1100px, 100%);
+            position: relative;
+            z-index: 2;
+        }
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #967174;
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(48px, 7vw, 90px);
+            font-weight: 400;
+            line-height: 1.05;
+            color: #503d40;
+            margin-bottom: 15px;
+        }
+        .small-ornament {
+            color: #a77d82;
+            font-size: 24px;
+            margin: 10px 0 20px;
+        }
+        .text-column {
+            max-width: 750px;
+            font-size: clamp(16px, 2vw, 20px);
+        }
+        .text-column p {
+            margin-bottom: 18px;
+        }
+
+        /* ABOUT PAGE */
+        .about-page {
+            background: linear-gradient(135deg, #fff8f7, #f4e2e2);
+        }
+
+        /* PAGE DIVIDER */
+        .page-divider {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ead3d3;
+        }
+        .page-divider span {
+            font-size: 30px;
+            color: #a77d82;
+            animation: spinSlow 12s linear infinite;
+        }
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+        /* SETTING PAGE */
+        .setting-page { background: #e9dcdc; }
+        .setting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            align-items: center;
+        }
+        .setting-image {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 12px 18px 30px rgba(70,50,50,.15);
+            transform: rotate(-1.5deg);
+            transition: .4s ease;
+        }
+        .setting-image img {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+        }
+        .image-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255,255,255,.85);
+            backdrop-filter: blur(5px);
+            letter-spacing: 2px;
+            font-size: 12px;
+        }
+
+        /* WOMEN & DREAMS PAGE */
+        .women-page { background: #f8e9e9; }
+        .women-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            align-items: center;
+        }
+        .women-text { font-size: clamp(16px, 2vw, 20px); }
+        .women-text p { margin-bottom: 18px; }
+        .vintage-photo-frame {
+            background: #ffffff;
+            padding: 15px 15px 45px;
+            box-shadow: 10px 15px 30px rgba(60,40,40,.12);
+            transform: rotate(2deg);
+            transition: .4s ease;
+        }
+        .vintage-photo-frame:hover { transform: rotate(0deg) scale(1.02); }
+        .photo-area img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+        .photo-caption {
+            text-align: center;
+            font-family: "Pinyon Script", cursive;
+            font-size: 28px;
+            margin-top: 15px;
+            color: #503d40;
+        }
+
+        /* CHARACTER SECTION */
+        .characters-page {
+            background: linear-gradient(180deg, #f0dede, #f8e9e9);
+            padding-bottom: 120px;
+        }
+        .characters-heading {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .character-card {
+            background: rgba(255,255,255,.6);
+            border: 1px solid #ceb4b4;
+            padding: 16px;
+            cursor: pointer;
+            transition: .4s ease;
+        }
+        .character-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 35px rgba(80,50,50,.12);
+            background: #fffaf7;
+        }
+        .character-number {
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #9a7478;
+            margin-bottom: 8px;
+        }
+        .character-image {
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .character-image img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            transition: transform .5s ease;
+        }
+        .character-card:hover .character-image img {
+            transform: scale(1.05);
+        }
+        .character-card h3 {
+            font-family: "Pinyon Script", cursive;
+            font-size: 38px;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .character-ornament { color: #a77d82; margin: 6px 0 10px; }
+        .character-card p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+        .character-tags { font-size: 11px; letter-spacing: 1px; color: #89676b; }
+
+        /* FEMINISM SECTION */
+        .feminism-page {
+            background: linear-gradient(135deg, #eee0df, #f8e9e9 55%, #e6d0d1);
+        }
+        .chapter-intro {
+            max-width: 750px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+        .feminism-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .feminism-card {
+            padding: 30px 25px;
+            background: #fffaf7;
+            border: 1px solid #d5b8b8;
+            position: relative;
+            transition: .4s ease;
+        }
+        .feminism-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(75,48,48,.1);
+        }
+        .feminism-card h3 {
+            font-family: "Pinyon Script", cursive;
+            font-size: 40px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .feminism-card p { font-size: 17px; }
+
+        /* SECTION IV: JO'S WRITING DESK */
+        .desk-section-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            align-items: center;
+            width: min(1100px, 100%);
+            margin: 0 auto;
+        }
+        .desk-page {
+            background: #e7d5c8;
+        }
+        .right-desk-card {
+            width: 100%;
+            background-color: #7a655c;
+            border-radius: 12px;
+            padding: 35px 25px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .inner-quote-box {
+            background-color: #fffcf8;
+            width: 100%;
+            padding: 30px 20px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+        .quote-title {
+            font-family: "Pinyon Script", cursive;
+            font-size: 42px;
+            color: #3a2e2e;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        .quote-body {
+            font-size: 17px;
+            color: #4a3e3e;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        .desk-icons-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .desk-icon-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .desk-icon-btn:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* TIMELINE SECTION */
+        .timeline-page { background: #f4e4e2; }
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: #b9989b;
+        }
+        .timeline-item {
+            width: 50%;
+            padding: 15px 30px;
+            position: relative;
+        }
+        .timeline-item:nth-child(odd) { text-align: right; }
+        .timeline-item:nth-child(even) { margin-left: 50%; }
+        .timeline-dot {
+            position: absolute;
+            top: 25px;
+            width: 13px; height: 13px;
+            border-radius: 50%;
+            background: #76585d;
+            border: 3px solid #f4e4e2;
+            box-shadow: 0 0 0 1px #76585d;
+        }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -7px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -7px; }
+        .timeline-card {
+            display: inline-block;
+            padding: 20px;
+            background: #fffaf7;
+            border: 1px solid #d8c0c0;
+            box-shadow: 0 8px 20px rgba(60,40,40,.06);
+            text-align: left;
+        }
+        .timeline-year { font-size: 11px; letter-spacing: 2px; color: #967174; }
+        .timeline-card h3 { font-size: 24px; margin: 4px 0; }
+        .timeline-card p { font-size: 16px; }
+
+        /* QUOTES SECTION */
+        .quote-page { background: #ead5d5; text-align: center; }
+        .quote-stage {
+            max-width: 800px;
+            margin: 30px auto 0;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 25px;
+            background: #fffaf7;
+            border: 1px solid #cdb0b0;
+            box-shadow: 0 15px 35px rgba(70,45,45,.1);
+            position: relative;
+        }
+        #quoteText {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(32px, 5vw, 55px);
+            line-height: 1.2;
+            transition: opacity .3s ease;
+        }
+        .quote-author {
+            margin-top: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: opacity .3s ease;
+        }
+        .quote-controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .story-btn {
+            border: 1px solid #87666a;
+            background: #fffaf7;
+            color: #493838;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-size: 13px;
+            transition: .3s ease;
+        }
+        .story-btn:hover {
+            background: #76585d;
+            color: #fff;
+        }
+
+        /* QUIZ SECTION */
+        .quiz-page {
+            background: radial-gradient(circle at 80% 20%, #fffaf7 0, transparent 30%), #e6d1d2;
+        }
+        .quiz-box {
+            max-width: 750px;
+            margin: 30px auto 0;
+            padding: 35px 25px;
+            background: #fffaf7;
+            border: 1px solid #cdb1b2;
+            box-shadow: 0 15px 35px rgba(70,45,45,.1);
+        }
+        .quiz-question {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(36px, 5vw, 48px);
+            line-height: 1.15;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .quiz-option {
+            padding: 15px;
+            border: 1px solid #d7bfc0;
+            background: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 17px;
+            color: #493838;
+            transition: .3s ease;
+            text-align: left;
+        }
+        .quiz-option:hover {
+            transform: translateY(-3px);
+            background: #f4e2e2;
+        }
+        .quiz-result {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f7e8e7;
+            border: 1px solid #d4b7b8;
+        }
+        .quiz-result.show { display: block; animation: fadeUp .5s both; }
+        .quiz-result h3 {
+            font-family: "Pinyon Script", cursive;
+            font-size: 45px;
+            font-weight: 400;
+        }
+
+        /* FINAL CHAPTER & AUTHOR */
+        .chapter-end {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px;
+            background: #f8e9e9;
+        }
+        .chapter-end h2 {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(45px, 8vw, 90px);
+            line-height: 1;
+        }
+        .author-page {
+            min-height: 70vh;
+            text-align: center;
+            background: radial-gradient(circle, #fff9f8, #eedada);
+        }
+        .quote-mark {
+            font-size: 80px;
+            color: #c49da0;
+            line-height: .4;
+        }
+        .author-quote {
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(35px, 5vw, 60px);
+            line-height: 1.2;
+        }
+
+        /* FOOTER & IMAGE CREDITS */
+        footer {
+            padding: 60px 20px 40px;
+            text-align: center;
+            background: #4e3b3e;
+            color: #f8e9e9;
+        }
+        footer h2 {
+            font-family: "Pinyon Script", cursive;
+            font-size: 55px;
+            font-weight: 400;
+        }
+        .footer-links {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .image-credits {
+            max-width: 800px;
+            margin: 30px auto 0;
+            padding: 25px 20px;
+            border-top: 1px dashed #785f62;
+            text-align: left;
+            font-size: 13px;
+            color: #d1bcbe;
+        }
+        .image-credits h4 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f8e9e9;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .image-credits ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px 20px;
+        }
+        .image-credits li a {
+            color: #e2c8c8;
+            text-decoration: underline;
+            transition: color .2s ease;
+        }
+        .image-credits li a:hover {
+            color: #ffffff;
+        }
+
+        /* CHARACTER MODAL */
+        .character-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(50,35,38,.6);
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            visibility: hidden;
+            transition: .4s ease;
+        }
+        .character-modal.active { opacity: 1; visibility: visible; }
+        .modal-book {
+            width: min(650px, 100%);
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #fff8f6;
+            padding: 40px 30px;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(20,10,10,.3);
+            border-radius: 4px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            border: none; background: none;
+            font-size: 28px; cursor: pointer; color: #76585d;
+        }
+        .modal-book h2 {
+            font-family: "Pinyon Script", cursive;
+            font-size: clamp(50px, 8vw, 75px);
+            font-weight: 400;
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        /* RESPONSIVE BREAKPOINTS */
+        @media (max-width: 900px) {
+            .storybook-nav { display: none; }
+            .story-rail { display: none; }
+            .story-page { padding: 80px 20px; }
+            .story-page::before { inset: 12px; }
+            .setting-grid, .women-layout, .desk-section-container {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+            .timeline::before { left: 15px; }
+            .timeline-item, .timeline-item:nth-child(even) {
+                width: 100%;
+                margin-left: 0;
+                padding: 10px 0 10px 35px;
+                text-align: left;
+            }
+            .timeline-item:nth-child(odd) .timeline-dot,
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 8px; right: auto;
+            }
+            .music-control-btn {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
 
 <body>
 
+    <!-- BACKGROUND AUDIO (Erik Satie - Gymnopédie No. 1 / Classical Piano) -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://upload.wikimedia.org/wikipedia/commons/3/34/Erik_Satie_-_gymnop%C3%A9die_no._1.ogg" type="audio/ogg">
+        <source src="https://ia800501.us.archive.org/11/items/GymnopedieNo1_59/GymnopedieNo1.mp3" type="audio/mpeg">
+    </audio>
 
-<!-- =====================================================
-     HERO SECTION
-===================================================== -->
+    <!-- MUSIC CONTROL BUTTON -->
+    <button class="music-control-btn" id="musicToggleBtn">
+        <span id="musicIcon">🎵</span> <span id="musicText">Play Music</span>
+    </button>
 
-<section class="hero" id="home">
-
-    <div class="hero-decoration top-left">
-        ✿
+    <!-- PAGE LOADER -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-book">📖</div>
+        <div class="loader-text">Opening the story...</div>
     </div>
 
-    <div class="hero-decoration top-right">
-        ✿
+    <!-- READING PROGRESS BAR -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- PARTICLES -->
+    <div class="particles" id="particles"></div>
+
+    <!-- CHAPTER RAIL -->
+    <div class="story-rail" aria-label="Story chapters">
+        <a href="#about">01</a>
+        <a href="#setting">02</a>
+        <a href="#women">03</a>
+        <a href="#characters">04</a>
+        <a href="#feminism">05</a>
+        <a href="#jos-desk">06</a>
+        <a href="#timeline">07</a>
+        <a href="#quotes">08</a>
+        <a href="#quiz">09</a>
     </div>
 
-    <div class="hero-inner">
+    <!-- NAVIGATION BAR -->
+    <nav class="storybook-nav">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#setting">Setting</a>
+        <a href="#women">Dreams</a>
+        <a href="#characters">Characters</a>
+        <a href="#feminism">Feminism</a>
+        <a href="#jos-desk">Jo's Desk</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#quotes">Quotes</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
 
-        <p class="eyebrow">
-            A CLASSIC NOVEL
-        </p>
-
-        <h1>
-            Little Women
-        </h1>
-
-        <div class="ornament">
-            ♡ ───────── ♡
-        </div>
-
-        <p class="tagline">
-            A story of sisterhood, dreams & becoming yourself
-        </p>
-
-        <div class="book-cover">
-            <img
-                src="little women .images.jpg"
-                alt="Little Women"
-            >
-        </div>
-
-        <!-- BUTTON เดียวของหน้า -->
-        <a
-            href="#about"
-            class="hero-button"
-        >
-            Begin the story
-        </a>
-
-    </div>
-
-    <div class="bow bow-left">
-        ‎ . ݁⋆ ۶ৎ ݁˖ . ݁
-    </div>
-
-    <div class="bow bow-right">
-        ‎ . ݁⋆ ۶ৎ ݁˖ . ݁
-    </div>
-
-</section>
-
-
-        <!-- =====================================
-             RIGHT PAGE
-             ABOUT THE NOVEL
-        ====================================== -->
-
-        <div
-            class="hero-page hero-right"
-            id="about"
-        >
-
-
-            <div class="bow-top">
-                ‎ . ݁⋆ ۶ৎ ݁˖ . ݁
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="hero-inner">
+            <p class="eyebrow">A CLASSIC NOVEL</p>
+            <h1>Little Women</h1>
+            <div class="ornament">♡ ───────── ♡</div>
+            <p class="tagline">A story of sisterhood, dreams & becoming yourself</p>
+            <div class="book-cover">
+                <img src="little-women-book-cover-2.jpg" alt="Little Women Book Cover">
             </div>
+            <a href="#about" class="hero-button">Begin the story</a>
+        </div>
+    </section>
 
+    <!-- ABOUT SECTION -->
+    <section class="story-page about-page" id="about">
+        <div class="story-inner">
+            <p class="section-label">ABOUT THE NOVEL</p>
+            <h2 class="section-title">Little Women</h2>
+            <div class="small-ornament">❦</div>
+            <div class="text-column">
+                <p><em>Little Women</em> is a timeless story about four sisters—Meg, Jo, Beth, and Amy—who grow up together during the American Civil War.</p>
+                <p>Although they have different dreams, personalities, and struggles, their love for one another keeps them close through every joy and hardship.</p>
+                <p>Filled with warmth, family, friendship, love, and the courage to follow your own dreams, <em>Little Women</em> reminds us that growing up does not mean growing apart.</p>
+            </div>
+        </div>
+    </section>
 
-            <div class="section-content">
+    <!-- DIVIDER -->
+    <div class="page-divider"><span>❦</span></div>
 
-
-                <p class="section-label">
-                    ABOUT THE NOVEL
-                </p>
-
-
-                <h2>
-                    Little Women
-                </h2>
-
-
-                <div class="small-ornament">
-                    ❦
-                </div>
-
-
+    <!-- SECTION I: SETTING -->
+    <section class="story-page setting-page" id="setting">
+        <div class="story-inner setting-grid">
+           <div class="vintage-photo-frame">
+    <div class="photo-area">
+        <img src="Little Women (2019).jpeg" alt="19th Century New England">
+    </div>
+    <div class="photo-caption" style="font-size: 20px;">19th Century New England</div>
+</div>
+            <div>
+                <p class="section-label">SECTION I</p>
+                <h2 class="section-title">Setting</h2>
+                <div class="small-ornament">─── ❦ ───</div>
                 <div class="text-column">
-
-
-                    <p>
-                        <em>Little Women</em> is a timeless story
-                        about four sisters—Meg, Jo, Beth, and Amy—
-                        who grow up together during the American
-                        Civil War.
-                    </p>
-
-
-                    <p>
-                        Although they have different dreams,
-                        personalities, and struggles, their love
-                        for one another keeps them close through
-                        every joy and hardship.
-                    </p>
-
-
-                    <p>
-                        Filled with warmth, family, friendship,
-                        love, and the courage to follow your own
-                        dreams, <em>Little Women</em> reminds us
-                        that growing up does not mean growing apart.
-                    </p>
-
-
+                    <p>Set in 19th-century New England during the American Civil War, <em>Little Women</em> mainly takes place in the March family home in Concord, Massachusetts.</p>
+                    <p>The story follows the four March sisters as they grow up in a changing world, surrounded by family, friends, and the challenges of everyday life.</p>
                 </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- SECTION II: WOMEN & DREAMS -->
+    <section class="story-page women-page" id="women">
+        <div class="story-inner women-layout">
+            <div class="women-text">
+                <p class="section-label">SECTION II</p>
+                <h2 class="section-title">Women & Dreams</h2>
+                <div class="small-ornament">❦</div>
+                <p><em>Little Women</em> inspires women to embrace their individuality and choose their own paths in life.</p>
+                <p>Through the four March sisters, the novel shows that there is no single definition of success or happiness.</p>
+                <p>Whether pursuing a career, building a family, creating art, or following personal dreams, every woman has the right to define her own future.</p>
+            </div>
+            <div class="vintage-photo-frame">
+                <div class="photo-area">
+                    <img src="ss-littlewomen.jpg" alt="Women, Dreams & Becoming Yourself">
+                </div>
+                <div class="photo-caption">Women, Dreams & Becoming Yourself</div>
+            </div>
+        </div>
+    </section>
 
+    <!-- SECTION III: CHARACTERS -->
+    <section class="story-page characters-page" id="characters">
+        <div class="story-inner">
+            <div class="characters-heading">
+                <p class="section-label">SECTION III</p>
+                <h2 class="section-title">Character Symbolism</h2>
+                <div class="small-ornament">❦</div>
+                <p>Turn the pages to discover what each March sister represents.</p>
+            </div>
+            <div class="character-grid">
+                <!-- MEG -->
+                <article class="character-card" data-character="meg">
+                    <div class="character-number">01</div>
+                    <div class="character-image"><img src="meg.jpg" alt="Meg March"></div>
+                    <div>PAGE I</div>
+                    <h3>Meg March</h3>
+                    <div class="character-ornament">─── ♡ ───</div>
+                    <p>Meg represents family, love, responsibility, and contentment. She dreams of a happy home and a loving family.</p>
+                    <div class="character-tags">Family · Love · Contentment</div>
+                </article>
+                <!-- JO -->
+                <article class="character-card" data-character="jo">
+                    <div class="character-number">02</div>
+                    <div class="character-image"><img src="jo.jpg" alt="Jo March"></div>
+                    <div>PAGE II</div>
+                    <h3>Jo March</h3>
+                    <div class="character-ornament">─── ♡ ───</div>
+                    <p>Jo represents independence, ambition, creativity, and determination.</p>
+                    <div class="character-tags">Independence · Ambition · Creativity</div>
+                </article>
+                <!-- BETH -->
+                <article class="character-card" data-character="beth">
+                    <div class="character-number">03</div>
+                    <div class="character-image"><img src="beth.jpg" alt="Beth March"></div>
+                    <div>PAGE III</div>
+                    <h3>Beth March</h3>
+                    <div class="character-ornament">─── ♡ ───</div>
+                    <p>Beth represents kindness, gentleness, selflessness, and unconditional love.</p>
+                    <div class="character-tags">Kindness · Gentleness · Selflessness</div>
+                </article>
+                <!-- AMY -->
+                <article class="character-card" data-character="amy">
+                    <div class="character-number">04</div>
+                    <div class="character-image"><img src="amy.jpg" alt="Amy March"></div>
+                    <div>PAGE IV</div>
+                    <h3>Amy March</h3>
+                    <div class="character-ornament">─── ♡ ───</div>
+                    <p>Amy represents ambition, artistry, confidence, and self-development.</p>
+                    <div class="character-tags">Artistry · Confidence · Ambition</div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION V: FEMINISM -->
+    <section class="story-page feminism-page" id="feminism">
+        <div class="story-inner">
+            <div class="chapter-intro">
+                <p class="section-label">SECTION V</p>
+                <h2 class="section-title">Feminism & Independence</h2>
+                <div class="small-ornament">── ❦ ──</div>
+                <p><em>Little Women</em> is not only a story about growing up. It asks what it means for a woman to build a life that feels truly her own.</p>
+            </div>
+            <div class="feminism-grid">
+                <article class="feminism-card">
+                    <h3>Her Own Voice</h3>
+                    <p>Jo refuses to make herself smaller simply to fit expectations. Her writing becomes a way to claim a voice on her own terms.</p>
+                </article>
+                <article class="feminism-card">
+                    <h3>Marriage</h3>
+                    <p>The March sisters do not all imagine adulthood in the same way. Their choices make room for different ideas of happiness.</p>
+                </article>
+                <article class="feminism-card">
+                    <h3>Work & Money</h3>
+                    <p>The sisters learn that dreams also have practical sides: work, money, education, and independence.</p>
+                </article>
+                <article class="feminism-card">
+                    <h3>Sisterhood</h3>
+                    <p>Independence does not mean standing alone. The sisters grow through encouragement and believing in each other.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION IV: JO'S WRITING DESK -->
+    <section class="story-page desk-page" id="jos-desk">
+        <div class="desk-section-container">
+            <div class="text-content">
+                <p class="section-label">SECTION IV</p>
+                <h2 class="section-title">Jo's Writing Desk</h2>
+                <div class="small-ornament">❦</div>
+                <p class="description-text" style="font-size: 19px; margin-bottom: 12px;">
+                    Click on the items on Jo's desk to discover what fuels her ambition and stories.
+                </p>
+                <p class="hint-text" style="font-style: italic; color: #8e6c70;">Select an object on the desk below...</p>
             </div>
 
-
-            <div class="bow bow-right">
-                ‎ . ݁⋆ ۶ৎ ݁˖ . ݁
+            <div class="right-desk-card">
+                <div class="inner-quote-box" id="deskQuoteBox">
+                    <h2 class="quote-title" id="deskTitle">My Story</h2>
+                    <p class="quote-body" id="deskQuote">"A girl can have a dream and make it her own."</p>
+                </div>
+                
+                <div class="desk-icons-bar">
+                    <button class="desk-icon-btn" title="Books" onclick="updateDesk('Books', '&quot;I like good strong words that mean something.&quot;')">📚</button>
+                    <button class="desk-icon-btn" title="Pen" onclick="updateDesk('My Story', '&quot;A girl can have a dream and make it her own.&quot;')">🖋️</button>
+                    <button class="desk-icon-btn" title="Candle" onclick="updateDesk('Candle', '&quot;There are many troubles which your poverty will cause...&quot;')">🕯️</button>
+                    <button class="desk-icon-btn" title="Rose" onclick="updateDesk('Rose', '&quot;Love is the only thing that we can carry with us when we go.&quot;')">🌹</button>
+                </div>
             </div>
+        </div>
+    </section>
 
+    <!-- SECTION VII: TIMELINE -->
+    <section class="story-page timeline-page" id="timeline">
+        <div class="story-inner">
+            <div class="chapter-intro">
+                <p class="section-label">SECTION VII</p>
+                <h2 class="section-title">A Story in Time</h2>
+                <div class="small-ornament">⏳ ❦ ⏳</div>
+                <p>Follow the sisters through a visual journey of growing up.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div class="timeline-card">
+                        <div class="timeline-year">BEGINNING</div>
+                        <h3>The March Sisters</h3>
+                        <p>Four sisters share one home while each quietly imagines a different future.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div class="timeline-card">
+                        <div class="timeline-year">GROWING</div>
+                        <h3>Dreams Take Shape</h3>
+                        <p>The sisters discover that becoming an adult means making choices.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div class="timeline-card">
+                        <div class="timeline-year">CHANGE</div>
+                        <h3>Love, Work & Loss</h3>
+                        <p>Joy and hardship push each sister to reconsider what she values.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div class="timeline-card">
+                        <div class="timeline-year">BECOMING</div>
+                        <h3>Finding Her Own Path</h3>
+                        <p>The sisters do not become the same kind of woman. Their differences are part of the story.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- SECTION VIII: QUOTES -->
+    <section class="story-page quote-page" id="quotes">
+        <div class="story-inner">
+            <div class="chapter-intro">
+                <p class="section-label">SECTION VIII</p>
+                <h2 class="section-title">Words to Keep</h2>
+                <div class="small-ornament">❦</div>
+            </div>
+            <div class="quote-stage">
+                <div>
+                    <div id="quoteText">“I am not afraid of storms, for I am learning how to sail my ship.”</div>
+                    <div class="quote-author" id="quoteAuthor">Jo March</div>
+                </div>
+            </div>
+            <div class="quote-controls">
+                <button class="story-btn" id="prevQuote">← Previous</button>
+                <button class="story-btn" id="nextQuote">Next →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION IX: QUIZ -->
+    <section class="story-page quiz-page" id="quiz">
+        <div class="story-inner">
+            <div class="chapter-intro">
+                <p class="section-label">SECTION IX</p>
+                <h2 class="section-title">Which March Sister?</h2>
+                <div class="small-ornament">♡ ❦ ♡</div>
+                <p>Pick the answer that feels most like you to discover which sister's spirit you resemble.</p>
+            </div>
+            <div class="quiz-box">
+                <div class="quiz-question" id="quizQuestion">What would you rather spend a free afternoon doing?</div>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-type="jo">Writing a story or trying something new</button>
+                    <button class="quiz-option" data-type="meg">Planning a beautiful day with people I love</button>
+                    <button class="quiz-option" data-type="beth">Staying home with music, books, or family</button>
+                    <button class="quiz-option" data-type="amy">Creating something beautiful or exploring art</button>
+                </div>
+                <div class="quiz-result" id="quizResult">
+                    <h3 id="resultName"></h3>
+                    <p id="resultText" style="font-size: 17px; margin-top: 10px;"></p>
+                    <button class="story-btn" id="resetQuiz" style="margin-top:20px;">Try again</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CHAPTER -->
+    <section class="chapter-end">
+        <div>
+            <p class="section-label">THE FINAL CHAPTER</p>
+            <h2>Keep becoming<br>yourself.</h2>
+            <p style="font-size: 18px; margin: 20px auto 30px; max-width: 600px;">The story of the March sisters reminds us that growing up means discovering who you are and creating a life you love.</p>
+            <a href="#home" class="hero-button">↻ Read from the beginning</a>
+        </div>
+    </section>
+
+    <!-- AUTHOR SECTION -->
+    <section class="story-page author-page">
+        <div class="story-inner">
+            <div class="quote-mark">“</div>
+            <p class="section-label">A WORD FROM THE AUTHOR</p>
+            <blockquote class="author-quote">I am not afraid of storms, for I am learning how to sail my ship.</blockquote>
+            <p class="author-name" style="letter-spacing: 3px;">— Louisa May Alcott</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h2>Little Women</h2>
+        <div class="ornament">♡ ───── ❦ ───── ♡</div>
+        <p>A story of sisterhood, dreams, love, and becoming yourself.</p>
+        <div class="footer-links">
+            <a href="#home">Home</a> <span>♡</span>
+            <a href="#about">About</a> <span>♡</span>
+            <a href="#setting">Setting</a> <span>♡</span>
+            <a href="#characters">Characters</a>
         </div>
 
+        <!-- IMAGE CREDITS / REFERENCES -->
+        <div class="image-credits">
+            <h4>Image Credits & References</h4>
+            <ul>
+                <li><strong>Book Cover:</strong> <a href="little-women-book-cover-2.jpg" target="_blank">Book Cover Illustration</a></li>
+                <li><strong>Setting:</strong> <a href="Little Women (2019).jpeg" target="_blank">Little Women (2019) Still</a></li>
+                <li><strong>Dreams & Sisterhood:</strong> <a href="ss-littlewomen.jpg" target="_blank">March Sisters Scene</a></li>
+                <li><strong>Meg March:</strong> <a href="meg.jpg" target="_blank">Meg Portrait</a></li>
+                <li><strong>Jo March:</strong> <a href="jo.jpg" target="_blank">Jo Portrait</a></li>
+                <li><strong>Beth March:</strong> <a href="beth.jpg" target="_blank">Beth Portrait</a></li>
+                <li><strong>Amy March:</strong> <a href="amy.jpg" target="_blank">Amy Portrait</a></li>
+            </ul>
+        </div>
 
+        <div style="width: 150px; height: 1px; background: #947477; margin: 25px auto 20px;"></div>
+        <p>© 2026 Little Women Interactive Storybook</p>
+    </footer>
+
+    <!-- CHARACTER MODAL -->
+    <div class="character-modal" id="characterModal">
+        <div class="modal-book">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="modal-number" id="modalNumber" style="letter-spacing: 3px; color: #a77d82;"></div>
+            <h2 id="modalName"></h2>
+            <div class="small-ornament">❦</div>
+            <p id="modalDescription" style="font-size: 18px; line-height: 1.6; margin-bottom: 20px;"></p>
+            <p class="modal-tags" id="modalTags" style="color: #8c686c; font-size: 13px; letter-spacing: 1px;"></p>
+        </div>
     </div>
 
-
-
-
-</section>
-
-
-
-<!-- =====================================================
-     SECTION 2
-     SETTING
-===================================================== -->
-
-<section
-    class="section setting-section"
-    id="setting"
->
-
-
-    <div class="decorative-frame">
-
-
-        <p class="section-label">
-            SECTION I
-        </p>
-
-
-        <h2>
-            Setting
-        </h2>
-
-
-        <div class="ornament-line">
-            ─── ❦ ───
-        </div>
-
-
-        <div class="two-column setting-grid">
-
-
-            <!-- =====================================
-                 SETTING TEXT
-            ====================================== -->
-
-            <div class="text-column">
-
-
-                <p>
-                    Set in 19th-century New England during
-                    the American Civil War, <em>Little Women</em>
-                    mainly takes place in the March family home
-                    in Concord, Massachusetts.
-                </p>
-
-
-                <p>
-                    The story follows the four March sisters
-                    as they grow up in a changing world,
-                    surrounded by family, friends, and the
-                    challenges of everyday life.
-                </p>
-
-
-            </div>
-
-
-
-            <!-- =====================================
-                 SETTING IMAGE
-            ====================================== -->
-
-            <div class="polaroid">
-
-
-                <img
-                    src="snowy-winter-church-stockcake.jpg"
-                    alt="Snowy winter church"
-                >
-
-
-                <p>
-                    19th Century New England
-                </p>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-</section>
-
-
-
-<!-- =====================================================
-     SECTION 3
-     WOMEN & DREAMS
-===================================================== -->
-
-<section
-    class="section inspiration-section"
-    id="inspiration"
->
-
-
-    <div class="vintage-frame inspiration-frame">
-
-
-        <div class="bow-top">
-            ‎ . ݁⋆ ۶ৎ ݁˖ . ݁
-        </div>
-
-
-        <p class="section-label">
-            SECTION II
-        </p>
-
-
-        <h2>
-            Women &amp; Dreams
-        </h2>
-
-
-        <div class="small-ornament">
-            ❦
-        </div>
-
-
-        <div class="two-column">
-
-
-            <!-- =====================================
-                 IMAGE
-            ====================================== -->
-
-            <div class="image-column">
-
-
-                <img
-                    src="the-metropolitan-museum-of-art-_BqXMtNAMlg-unsplash.webp"
-                    alt="Woman in an art museum"
-                >
-
-
-            </div>
-
-
-
-            <!-- =====================================
-                 TEXT
-            ====================================== -->
-
-            <div class="text-column">
-
-
-                <p>
-                    <em>Little Women</em> inspires women
-                    to embrace their individuality and
-                    choose their own paths in life.
-                </p>
-
-
-                <p>
-                    Through the four March sisters,
-                    the novel shows that there is no
-                    single definition of success or happiness.
-                </p>
-
-
-                <p>
-                    Whether pursuing a career, building
-                    a family, creating art, or following
-                    personal dreams, every woman has the
-                    right to define her own future.
-                </p>
-
-
-                <p>
-                    The story encourages women to value
-                    their voices, support one another,
-                    and remain true to themselves.
-                </p>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-</section>
-
-
-
-
-<section
-    class="section characters-section"
-    id="characters"
->
-
-    <div class="book-section">
-
-        <p class="section-label">
-            SECTION III
-        </p>
-
-        <h2>
-            Character Symbolism
-        </h2>
-
-        <p class="instruction">
-            Turn the pages to discover what each March
-            sister represents.
-        </p>
-
-
-        <!-- =================================================
-             CHARACTER BOOK
-        ================================================== -->
-
-        <div class="character-book">
-
-
-            <!-- =========================================
-                 PAGE 01 — MEG
-            ========================================== -->
-
-            <article class="character-page">
-
-                <span class="page-number">
-                    01
-                </span>
-
-                <img
-                    src="YOUR-MEG-IMAGE.jpg"
-                    alt="Meg March"
-                    class="character-image"
-                >
-
-                <p class="page-label">
-                    PAGE I
-                </p>
-
-                <h3>
-                    Meg March
-                </h3>
-
-                <div class="heart-line">
-                    ─── ♡ ───
-                </div>
-
-                <p class="character-description">
-                    Meg, the eldest March sister, represents
-                    family, love, responsibility, and contentment.
-                    She dreams of a happy home and a loving family
-                    rather than a life filled with wealth.
-                </p>
-
-                <p class="character-description">
-                    Through Meg, the novel shows that a meaningful
-                    life does not have to be defined by material
-                    success. Her journey reflects the value of
-                    love, family, and finding happiness in an
-                    ordinary life.
-                </p>
-
-                <p class="character-keyword">
-                    Family · Love · Contentment
-                </p>
-
-            </article>
-
-                        <!-- =========================================
-                 PAGE 02 — JO
-            ========================================== -->
-
-            <article class="character-page">
-
-                <span class="page-number">
-                    02
-                </span>
-
-                <img
-                    src="YOUR-JO-IMAGE.jpg"
-                    alt="Jo March"
-                    class="character-image"
-                >
-
-                <p class="page-label">
-                    PAGE II
-                </p>
-
-                <h3>
-                    Jo March
-                </h3>
-
-                <div class="heart-line">
-                    ─── ♡ ───
-                </div>
-
-                <p class="character-description">
-                    Jo, the second eldest sister, represents
-                    independence, ambition, creativity, and
-                    determination. She is passionate about writing
-                    and dreams of becoming a successful author.
-                </p>
-
-                <p class="character-description">
-                    Jo refuses to simply follow the expectations
-                    placed on women of her time. Her journey
-                    encourages women to have their own voices,
-                    pursue their ambitions, and create their own
-                    paths in life.
-                </p>
-
-                <p class="character-keyword">
-                    Independence · Ambition · Creativity
-                </p>
-
-            </article>
-
-            <!-- =========================================
-                 PAGE 03 — BETH
-            ========================================== -->
-
-            <article class="character-page">
-
-                <span class="page-number">
-                    03
-                </span>
-
-                <img
-                    src="YOUR-BETH-IMAGE.jpg"
-                    alt="Beth March"
-                    class="character-image"
-                >
-
-                <p class="page-label">
-                    PAGE III
-                </p>
-
-                <h3>
-                    Beth March
-                </h3>
-
-                <div class="heart-line">
-                    ─── ♡ ───
-                </div>
-
-                <p class="character-description">
-                    Beth, the third March sister, represents
-                    kindness, gentleness, selflessness, and
-                    unconditional love. She is quiet and shy,
-                    finding happiness in music and spending time
-                    with her family.
-                </p>
-
-                <p class="character-description">
-                    Beth reminds us that a person's value does
-                    not have to come from fame or achievement.
-                    Her character highlights the beauty of
-                    kindness, generosity, and caring for others.
-                </p>
-
-                <p class="character-keyword">
-                    Kindness · Gentleness · Selflessness
-                </p>
-
-            </article>
-            <!-- =========================================
-                 PAGE 04 — AMY
-            ========================================== -->
-
-            <article class="character-page">
-
-                <span class="page-number">
-                    04
-                </span>
-
-                <img
-                    src="YOUR-AMY-IMAGE.jpg"
-                    alt="Amy March"
-                    class="character-image"
-                >
-
-                <p class="page-label">
-                    PAGE IV
-                </p>
-
-                <h3>
-                    Amy March
-                </h3>
-
-                <div class="heart-line">
-                    ─── ♡ ───
-                </div>
-
-                <p class="character-description">
-                    Amy, the youngest March sister, represents
-                    ambition, artistry, confidence, and
-                    self-development. She dreams of becoming
-                    an accomplished artist and wants to experience
-                    the wider world.
-                </p>
-
-                <p class="character-description">
-                    As Amy grows older, she learns to balance
-                    her ambitions with responsibility and
-                    maturity. Her story shows that pursuing
-                    one's dreams can take many different forms.
-                </p>
-
-                <p class="character-keyword">
-                    Artistry · Confidence · Ambition
-                </p>
-
-            </article>
-
-
-        </div>
-
-    </div>
-
-</section>
-
-<footer class="site-footer">
-
-    <div class="footer-frame">
-
-        <!-- Decorative bow -->
-        <div class="footer-bow">
-            ‎ . ݁⋆ ۶ৎ ݁˖ .
-        </div>
-
-
-        <!-- Label -->
-        <p class="footer-label">
-            A WORD FROM THE AUTHOR
-        </p>
-
-
-        <!-- Quote -->
-        <div class="footer-quote">
-
-            <div class="footer-quote-mark">
-                “
-            </div>
-
-            <blockquote>
-                I am not afraid of storms,
-                for I am learning how to sail my ship.
-            </blockquote>
-
-            <p class="quote-author">
-                — Louisa May Alcott
-            </p>
-
-        </div>
-
-
-        <!-- Closing -->
-        <h2 class="footer-title">
-            Little Women
-        </h2>
-
-
-        <div class="footer-ornament">
-            ♡ ───── ❦ ───── ♡
-        </div>
-
-
-        <p class="footer-text">
-            A story of sisterhood, dreams,
-            love, and becoming yourself.
-        </p>
-
-
-        <!-- Navigation -->
-        <nav class="footer-nav">
-
-            <a href="#home">
-                Home
-            </a>
-
-            <span>♡</span>
-
-            <a href="#about">
-                About
-            </a>
-
-            <span>♡</span>
-
-            <a href="#setting">
-                Setting
-            </a>
-
-            <span>♡</span>
-
-            <a href="#characters">
-                Characters
-            </a>
-
-        </nav>
-
-
-        <!-- Divider -->
-        <div class="footer-line">
-            ─────────────── ❦ ───────────────
-        </div>
-
-
-        <!-- Credit -->
-        <p class="footer-credit">
-            <em>Little Women</em> by Louisa May Alcott
-        </p>
-
-        <p class="footer-copy">
-            © 2026 Little Women
-        </p>
-
-    </div>
-
-</footer>
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // MUSIC PLAYER LOGIC
+        const audio = document.getElementById("bgMusic");
+        const musicBtn = document.getElementById("musicToggleBtn");
+        const musicIcon = document.getElementById("musicIcon");
+        const musicText = document.getElementById("musicText");
+        let isPlaying = false;
+
+        musicBtn.addEventListener("click", () => {
+            if (isPlaying) {
+                audio.pause();
+                musicIcon.textContent = "🎵";
+                musicText.textContent = "Play Music";
+            } else {
+                audio.play();
+                musicIcon.textContent = "⏸️";
+                musicText.textContent = "Pause Music";
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // PAGE LOADER
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                document.getElementById("pageLoader").classList.add("hide");
+            }, 600);
+        });
+
+        // READING PROGRESS
+        window.addEventListener("scroll", () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            document.getElementById("readingProgress").style.width = (scrollTop / docHeight) * 100 + "%";
+        });
+
+        // PARTICLES
+        const particleContainer = document.getElementById("particles");
+        const symbols = ["✦", "✧", "♡", "✿", "❦"];
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement("span");
+            p.className = "particle";
+            p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            p.style.left = Math.random() * 100 + "%";
+            p.style.fontSize = (10 + Math.random() * 10) + "px";
+            p.style.animationDuration = (10 + Math.random() * 12) + "s";
+            p.style.animationDelay = (-Math.random() * 10) + "s";
+            particleContainer.appendChild(p);
+        }
+
+        // JO'S DESK INTERACTION
+        function updateDesk(title, quote) {
+            const box = document.getElementById('deskQuoteBox');
+            box.style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('deskTitle').innerText = title;
+                document.getElementById('deskQuote').innerHTML = quote;
+                box.style.opacity = '1';
+            }, 200);
+        }
+
+        // CHARACTER DATA & MODAL
+        const characterData = {
+            meg: {
+                number: "PAGE I",
+                name: "Meg March",
+                description: "Meg represents family, love, responsibility, and contentment. She dreams of a happy home and a loving family. Her journey reflects the value of finding happiness in everyday life.",
+                tags: "Family · Love · Contentment"
+            },
+            jo: {
+                number: "PAGE II",
+                name: "Jo March",
+                description: "Jo represents independence, ambition, creativity, and determination. She is passionate about writing and refuses to simply follow society's expectations.",
+                tags: "Independence · Ambition · Creativity"
+            },
+            beth: {
+                number: "PAGE III",
+                name: "Beth March",
+                description: "Beth represents kindness, gentleness, selflessness, and unconditional love. Quiet and shy, she finds pure joy in music and family.",
+                tags: "Kindness · Gentleness · Selflessness"
+            },
+            amy: {
+                number: "PAGE IV",
+                name: "Amy March",
+                description: "Amy represents ambition, artistry, confidence, and self-development. She dreams of becoming an artist and exploring the wider world.",
+                tags: "Artistry · Confidence · Ambition"
+            }
+        };
+
+        const modal = document.getElementById("characterModal");
+        document.querySelectorAll(".character-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const data = characterData[card.dataset.character];
+                document.getElementById("modalNumber").textContent = data.number;
+                document.getElementById("modalName").textContent = data.name;
+                document.getElementById("modalDescription").textContent = data.description;
+                document.getElementById("modalTags").textContent = data.tags;
+                modal.classList.add("active");
+            });
+        });
+
+        document.getElementById("modalClose").addEventListener("click", () => modal.classList.remove("active"));
+        modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+
+        // QUOTE TURNER
+        const quotes = [
+            { text: "“I am not afraid of storms, for I am learning how to sail my ship.”", author: "Jo March" },
+            { text: "“I could never love anyone as I love my sisters.”", author: "The spirit of sisterhood" },
+            { text: "“I want to do something splendid.”", author: "Jo March" },
+            { text: "“I am glad to be a woman.”", author: "Meg March" }
+        ];
+        let quoteIdx = 0;
+        const qText = document.getElementById("quoteText");
+        const qAuth = document.getElementById("quoteAuthor");
+
+        function showQuote(idx) {
+            qText.style.opacity = "0";
+            qAuth.style.opacity = "0";
+            setTimeout(() => {
+                qText.textContent = quotes[idx].text;
+                qAuth.textContent = quotes[idx].author;
+                qText.style.opacity = "1";
+                qAuth.style.opacity = "1";
+            }, 200);
+        }
+
+        document.getElementById("nextQuote").addEventListener("click", () => {
+            quoteIdx = (quoteIdx + 1) % quotes.length;
+            showQuote(quoteIdx);
+        });
+        document.getElementById("prevQuote").addEventListener("click", () => {
+            quoteIdx = (quoteIdx - 1 + quotes.length) % quotes.length;
+            showQuote(quoteIdx);
+        });
+
+        // QUIZ LOGIC
+        const sisterResults = {
+            jo: { name: "You have Jo's spirit.", text: "Independent, imaginative, and determined to choose your own path." },
+            meg: { name: "You have Meg's spirit.", text: "Warm, grounded, and focused on creating beauty and love around you." },
+            beth: { name: "You have Beth's spirit.", text: "Gentle, thoughtful, and happiest when comforting those you care about." },
+            amy: { name: "You have Amy's spirit.", text: "Creative, ambitious, and driven to turn your talents into something great." }
+        };
+
+        document.querySelectorAll(".quiz-option").forEach(opt => {
+            opt.addEventListener("click", () => {
+                const res = sisterResults[opt.dataset.type];
+                document.getElementById("resultName").textContent = res.name;
+                document.getElementById("resultText").textContent = res.text;
+                document.getElementById("quizResult").classList.add("show");
+            });
+        });
+
+        document.getElementById("resetQuiz").addEventListener("click", () => {
+            document.getElementById("quizResult").classList.remove("show");
+        });
+    </script>
+</body>
+</html>

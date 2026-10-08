@@ -1,3 +1,5 @@
+
+
 /* =====================================================
    RESET / BASIC
 ===================================================== */
@@ -10,89 +12,146 @@
 
 html {
     scroll-behavior: smooth;
+    width: 100%;
 }
 
 body {
-    background: #f8e9e9;
-    color: #493838;
-    font-family: "Cormorant Garamond", serif;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+
+    background: #f8eaea;
+    color: #5b4547;
+
+    font-family: "Lancelot", cursive;
+
+    font-size: 18px;
     line-height: 1.7;
+
     overflow-x: hidden;
 }
 
-img {
-    max-width: 100%;
-    display: block;
-}
+
+/* =====================================================
+   ROOT COLORS
+===================================================== */
 
 :root {
     --pink: #f3d6d8;
     --light-pink: #f9e9e9;
+
     --cream: #fffaf3;
     --dark-pink: #b8878d;
+
     --brown: #493838;
     --soft-brown: #80686a;
+
     --gold: #b99a72;
+
     --white: #fffdf9;
 }
 
 
 /* =====================================================
-   RESET
+   IMAGE
 ===================================================== */
 
-* {
-    box-sizing: border-box;
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-}
-
-body {
-    background: #f8eaea;
-    color: #5b4547;
-}
 
 /* =====================================================
-   TYPOGRAPHY
+   HEADINGS
+===================================================== */
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+
+/* =====================================================
+   H1
 ===================================================== */
 
 h1 {
     font-family: "Pinyon Script", cursive;
-    font-size: clamp(60px, 9vw, 140px);
+
+    /*
+       Desktop:
+       ใหญ่แต่ไม่ล้นจอ
+    */
+    font-size: clamp(68px, 9vw, 140px);
+
     font-weight: 400;
+
     color: #4d3939;
-    line-height: 1;
-    margin: 0 0 35px;
+
+    line-height: 0.95;
+
+    margin: 0 0 30px;
+
     text-align: center;
+
+    word-break: normal;
 }
+
+
+/* =====================================================
+   H2
+===================================================== */
 
 h2 {
     font-family: "Playfair Display", serif;
+
     font-size: clamp(38px, 5vw, 62px);
+
     font-weight: 500;
+
     color: var(--brown);
+
     line-height: 1.2;
+
     margin: 0 0 25px;
+
     text-align: center;
 }
+
+
+/* =====================================================
+   H3
+===================================================== */
 
 h3 {
     font-family: "Playfair Display", serif;
-    font-size: 30px;
+
+    font-size: clamp(25px, 3vw, 30px);
+
     font-weight: 500;
+
     color: var(--brown);
+
+    line-height: 1.3;
+
     text-align: center;
 }
 
+
+/* =====================================================
+   PARAGRAPH
+===================================================== */
+
 p {
     font-size: 18px;
+
     line-height: 1.8;
+
+    color: #5b4547;
 }
 
 
@@ -102,40 +161,45 @@ p {
 
 .hero {
     width: 100%;
+
     min-height: 100vh;
     min-height: 100svh;
 
     position: relative;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
-    padding: 60px 20px;
+    padding: 70px 25px;
 
     overflow: hidden;
 
     background:
         repeating-linear-gradient(
             90deg,
+
             #f8e3e5 0px,
             #f8e3e5 45px,
+
             #fffaf9 45px,
             #fffaf9 90px
         );
 
-    box-sizing: border-box;
+    isolation: isolate;
 }
 
 
 /* =====================================================
-   PAPER TEXTURE
+   HERO PAPER TEXTURE
 ===================================================== */
 
 .hero::before {
     content: "";
 
     position: absolute;
+
     inset: 0;
 
     background-image:
@@ -147,36 +211,38 @@ p {
     background-size: 8px 8px;
 
     pointer-events: none;
+
+    z-index: -1;
 }
 
 
 /* =====================================================
    HERO INNER
-   ไม่มีกรอบ
-   ไม่มีพื้นขาว
-   ไม่มีเงา
 ===================================================== */
 
 .hero-inner {
     position: relative;
+
     z-index: 2;
 
     width: min(900px, 100%);
 
     margin: 0 auto;
 
-    padding: 20px;
-
-    box-sizing: border-box;
+    padding: 30px 20px;
 
     background: transparent;
+
     border: none;
+
     box-shadow: none;
 
     display: flex;
+
     flex-direction: column;
 
     align-items: center;
+
     justify-content: center;
 
     text-align: center;
@@ -184,60 +250,569 @@ p {
 
 
 /* =====================================================
-   HERO TEXT
+   HERO EYEBROW
 ===================================================== */
 
 .eyebrow {
     width: 100%;
 
-    letter-spacing: 6px;
-    font-size: 13px;
+    margin: 0 0 18px;
+
+    font-family: "Lancelot", cursive;
+
+    font-size: clamp(14px, 1.5vw, 17px);
+
+    font-weight: 400;
+
+    letter-spacing: clamp(3px, 0.6vw, 6px);
+
+    line-height: 1.5;
 
     color: var(--soft-brown);
 
-    margin: 0 0 15px;
-
     text-align: center;
 }
 
 
+/* =====================================================
+   HERO ORNAMENT
+===================================================== */
+
 .ornament {
-    font-size: 22px;
+    margin: 20px 0 25px;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: clamp(18px, 2vw, 25px);
+
+    line-height: 1;
 
     color: var(--dark-pink);
 
-    margin: 25px 0;
-
     text-align: center;
+
+    white-space: nowrap;
 }
 
 
+/* =====================================================
+   HERO TAGLINE
+===================================================== */
+
 .tagline {
     width: 100%;
+
     max-width: 850px;
+
+    margin: 0 auto 30px;
 
     font-family: "Playfair Display", serif;
 
     font-style: italic;
 
-    font-size: 19px;
+    font-size: clamp(17px, 1.7vw, 21px);
+
+    line-height: 1.7;
 
     color: var(--soft-brown);
-
-    margin: 0 auto 25px;
 
     text-align: center;
 }
 
 
+/* =====================================================
+   HERO INNER PARAGRAPHS
+===================================================== */
+
 .hero-inner p {
     width: 100%;
+
     max-width: 850px;
 
     margin-left: auto;
     margin-right: auto;
 
     text-align: center;
+}
+
+
+/* =====================================================
+   BOOK COVER
+===================================================== */
+
+.book-cover {
+    width: min(330px, 75vw);
+
+    margin: 15px auto 30px;
+
+    position: relative;
+
+    transition:
+        transform 0.5s ease,
+        filter 0.5s ease;
+}
+
+
+/* รูปหนังสือ */
+
+.book-cover img {
+    width: 100%;
+
+    height: auto;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+    box-shadow:
+        0 18px 35px rgba(73, 56, 56, 0.18);
+
+    transition:
+        transform 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+
+/* Hover desktop */
+
+@media (hover: hover) {
+
+    .book-cover:hover {
+        transform: translateY(-10px) rotate(-1deg);
+    }
+
+    .book-cover:hover img {
+        box-shadow:
+            0 25px 45px rgba(73, 56, 56, 0.25);
+    }
+}
+
+
+/* =====================================================
+   HERO BUTTON
+===================================================== */
+
+.hero-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 52px;
+
+    padding: 12px 30px;
+
+    border: 1px solid var(--brown);
+
+    border-radius: 999px;
+
+    background: var(--brown);
+
+    color: var(--white);
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 17px;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    text-align: center;
+
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.hero-button:hover {
+    transform: translateY(-4px);
+
+    background: var(--dark-pink);
+
+    border-color: var(--dark-pink);
+
+    color: #fff;
+
+    box-shadow:
+        0 10px 20px rgba(73, 56, 56, 0.15);
+}
+
+
+/* =====================================================
+   HERO DECORATIONS
+===================================================== */
+
+.hero-decoration {
+    position: absolute;
+
+    z-index: 1;
+
+    color: var(--dark-pink);
+
+    font-size: clamp(30px, 5vw, 60px);
+
+    opacity: 0.55;
+
+    pointer-events: none;
+}
+
+
+.hero-decoration.top-left {
+    top: 40px;
+    left: 5%;
+}
+
+
+.hero-decoration.top-right {
+    top: 40px;
+    right: 5%;
+}
+
+
+/* =====================================================
+   BOW / DECORATIVE ELEMENTS
+===================================================== */
+
+.bow {
+    position: absolute;
+
+    z-index: 2;
+
+    color: var(--dark-pink);
+
+    font-size: clamp(18px, 2vw, 28px);
+
+    opacity: 0.7;
+
+    pointer-events: none;
+}
+
+
+.bow-left {
+    left: 4%;
+    bottom: 8%;
+}
+
+
+.bow-right {
+    right: 4%;
+    bottom: 8%;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .hero {
+        padding: 60px 20px;
+    }
+
+    .hero-inner {
+        width: min(760px, 100%);
+
+        padding: 25px 15px;
+    }
+
+    h1 {
+        font-size: clamp(65px, 12vw, 110px);
+
+        margin-bottom: 25px;
+    }
+
+    .book-cover {
+        width: min(300px, 65vw);
+    }
+
+    .hero-decoration.top-left {
+        left: 3%;
+    }
+
+    .hero-decoration.top-right {
+        right: 3%;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    body {
+        font-size: 17px;
+        line-height: 1.75;
+    }
+
+
+    .hero {
+        min-height: 100svh;
+
+        padding:
+            50px 15px
+            60px;
+
+        align-items: center;
+    }
+
+
+    .hero-inner {
+        width: 100%;
+
+        padding: 15px 10px;
+    }
+
+
+    /* -----------------------------
+       TITLE
+    ----------------------------- */
+
+    h1 {
+        font-size: clamp(58px, 18vw, 85px);
+
+        line-height: 0.95;
+
+        margin-bottom: 22px;
+    }
+
+
+    /* -----------------------------
+       EYEBROW
+    ----------------------------- */
+
+    .eyebrow {
+        font-size: 13px;
+
+        letter-spacing: 3px;
+
+        line-height: 1.5;
+
+        margin-bottom: 15px;
+    }
+
+
+    /* -----------------------------
+       ORNAMENT
+    ----------------------------- */
+
+    .ornament {
+        margin: 18px 0;
+
+        font-size: 17px;
+
+        max-width: 100%;
+
+        overflow: hidden;
+    }
+
+
+    /* -----------------------------
+       TAGLINE
+    ----------------------------- */
+
+    .tagline {
+        width: 100%;
+
+        padding: 0 5px;
+
+        font-size: 17px;
+
+        line-height: 1.7;
+
+        margin-bottom: 22px;
+    }
+
+
+    /* -----------------------------
+       BOOK
+    ----------------------------- */
+
+    .book-cover {
+        width: min(270px, 72vw);
+
+        margin: 10px auto 25px;
+    }
+
+
+    /* -----------------------------
+       BUTTON
+    ----------------------------- */
+
+    .hero-button {
+        width: auto;
+
+        min-width: 190px;
+
+        min-height: 50px;
+
+        padding: 12px 24px;
+
+        font-size: 16px;
+    }
+
+
+    /* -----------------------------
+       DECORATIONS
+    ----------------------------- */
+
+    .hero-decoration {
+        font-size: 30px;
+
+        opacity: 0.4;
+    }
+
+
+    .hero-decoration.top-left {
+        top: 20px;
+        left: 5%;
+    }
+
+
+    .hero-decoration.top-right {
+        top: 20px;
+        right: 5%;
+    }
+
+
+    .bow {
+        font-size: 18px;
+
+        opacity: 0.5;
+    }
+
+
+    .bow-left {
+        left: 3%;
+
+        bottom: 3%;
+    }
+
+
+    .bow-right {
+        right: 3%;
+
+        bottom: 3%;
+    }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    body {
+        font-size: 16px;
+    }
+
+
+    .hero {
+        padding:
+            40px 12px
+            50px;
+    }
+
+
+    .hero-inner {
+        padding: 10px 5px;
+    }
+
+
+    h1 {
+        font-size: clamp(52px, 18vw, 72px);
+
+        margin-bottom: 18px;
+    }
+
+
+    .eyebrow {
+        font-size: 12px;
+
+        letter-spacing: 2.5px;
+    }
+
+
+    .tagline {
+        font-size: 16px;
+
+        line-height: 1.65;
+    }
+
+
+    .book-cover {
+        width: min(240px, 70vw);
+
+        margin-bottom: 22px;
+    }
+
+
+    .hero-button {
+        min-width: 175px;
+
+        min-height: 48px;
+
+        padding: 11px 20px;
+
+        font-size: 15px;
+    }
+}
+
+
+/* =====================================================
+   LANDSCAPE MOBILE
+===================================================== */
+
+@media (max-height: 550px) and (orientation: landscape) {
+
+    .hero {
+        min-height: auto;
+
+        padding:
+            40px 20px
+            60px;
+    }
+
+
+    .book-cover {
+        width: 190px;
+    }
+
+
+    h1 {
+        font-size: clamp(55px, 10vw, 80px);
+    }
+}
+
+
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+
+        scroll-behavior: auto !important;
+    }
 }
 
 
@@ -645,6 +1220,130 @@ p {
     font-size: 27px;
 
     margin-top: 8px;
+}
+/* =====================================================
+   WOMEN & DREAMS — PHOTO FRAME + CAPTION
+===================================================== */
+
+.women-dreams-frame {
+    width: min(100%, 500px);
+    margin: 0 auto;
+
+    padding: 12px;
+
+    background: #fffaf3;
+
+    border: 1px solid #8d7774;
+
+    box-shadow:
+        0 15px 35px rgba(70, 45, 45, 0.18);
+
+    position: relative;
+
+    transition: 0.4s ease;
+}
+
+
+/* กรอบเส้นด้านใน */
+.women-dreams-frame::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 8px;
+
+    border: 1px solid #c5a7a4;
+
+    pointer-events: none;
+
+    z-index: 3;
+}
+
+
+/* รูป */
+.women-dreams-frame img {
+    display: block;
+
+    width: 100%;
+
+    height: 330px;
+
+    object-fit: cover;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* ข้อความใต้รูป */
+.women-dreams-caption {
+    min-height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 12px 18px;
+
+    background: #fffdf9;
+
+    border-top: 1px solid #d8c7bd;
+
+    color: #493838;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 19px;
+
+    letter-spacing: 3px;
+
+    line-height: 1.4;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* Hover */
+.women-dreams-frame:hover {
+    transform: translateY(-8px) rotate(-0.5deg);
+
+    box-shadow:
+        0 22px 42px rgba(70, 45, 45, 0.22);
+}
+
+
+/* =====================================================
+   WOMEN & DREAMS — MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .women-dreams-frame {
+        width: 100%;
+
+        padding: 9px;
+    }
+
+    .women-dreams-frame img {
+        height: 250px;
+    }
+
+    .women-dreams-caption {
+        min-height: 55px;
+
+        padding: 10px;
+
+        font-size: 16px;
+
+        letter-spacing: 2px;
+    }
 }
 
 
@@ -1072,5 +1771,178 @@ p {
 
     .footer-nav {
         gap: 8px;
+    }
+}
+
+
+/* =====================================================
+   MAIN HEADINGS
+   Little Women
+   Setting
+   Women & Dreams
+   Character Symbolism
+===================================================== */
+
+.section-content h2,
+.story-section h2,
+.setting-section h2,
+.women-section h2,
+.character-section h2,
+.about-section h2 {
+
+    font-family: "Playfair Display", serif;
+
+    /*
+       Desktop
+       ใหญ่และเด่นชัด
+    */
+    font-size: clamp(48px, 6vw, 76px);
+
+    font-weight: 500;
+
+    color: #493838;
+
+    line-height: 1.15;
+
+    text-align: center;
+
+    margin-top: 0;
+
+    margin-bottom: 30px;
+
+    letter-spacing: 0;
+
+    /* ป้องกัน heading ถูกบีบ */
+    width: 100%;
+
+    display: block;
+}
+
+
+/* =====================================================
+   ABOUT — Little Women
+===================================================== */
+
+#about h2 {
+    font-size: clamp(50px, 6vw, 78px);
+
+    color: #493838;
+
+    line-height: 1.15;
+
+    margin-bottom: 30px;
+}
+
+
+/* =====================================================
+   SETTING
+===================================================== */
+
+#setting h2,
+.setting h2 {
+
+    font-size: clamp(50px, 6vw, 78px);
+
+    color: #493838;
+
+    line-height: 1.15;
+
+    margin-bottom: 30px;
+}
+
+
+/* =====================================================
+   WOMEN & DREAMS
+===================================================== */
+
+#women h2,
+.women h2 {
+
+    font-size: clamp(50px, 6vw, 78px);
+
+    color: #493838;
+
+    line-height: 1.15;
+
+    margin-bottom: 30px;
+}
+
+
+/* =====================================================
+   CHARACTER SYMBOLISM
+===================================================== */
+
+#characters h2,
+.characters h2,
+.character-section h2 {
+
+    font-size: clamp(50px, 6vw, 78px);
+
+    color: #493838;
+
+    line-height: 1.15;
+
+    margin-bottom: 30px;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .section-content h2,
+    .story-section h2,
+    .setting-section h2,
+    .women-section h2,
+    .character-section h2,
+    .about-section h2,
+    #about h2,
+    #setting h2,
+    .setting h2,
+    #women h2,
+    .women h2,
+    #characters h2,
+    .characters h2,
+    .character-section h2 {
+
+        /*
+           มือถือยังต้องเห็นชัด
+           ไม่ลดเล็กเกินไป
+        */
+        font-size: clamp(38px, 11vw, 56px);
+
+        line-height: 1.15;
+
+        margin-bottom: 24px;
+
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+
+/* =====================================================
+   SMALL PHONE
+===================================================== */
+
+@media (max-width: 380px) {
+
+    .section-content h2,
+    .story-section h2,
+    .setting-section h2,
+    .women-section h2,
+    .character-section h2,
+    #about h2,
+    #setting h2,
+    #women h2,
+    #characters h2 {
+
+        font-size: 38px;
+
+        line-height: 1.15;
+
+        margin-bottom: 20px;
     }
 }
